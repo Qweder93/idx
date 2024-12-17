@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.indexer
+    ports:
+      - "${INDEXER_PORT}:${INDEXER_PORT}"
+    environment:
+      DB_HOST: ${HOST}
+      DB_PORT: ${POSTGRES_PORT}
+    env_file:
+      - .env.akavefuji
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_DB: ${DATABASE}
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: api-container
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    depends_on:
+      - postgres
+    env_file:
+      - .env.akavefuji
+    environment:
+      DB_HOST: ${HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_USER: ${USER}
+      DB_PASSWORD: ${PASSWORD}
+      DB_NAME: ${DATABASE}

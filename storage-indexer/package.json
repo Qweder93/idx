@@ -1,0 +1,23 @@
+{
+  "name": "service-deals",
+  "author": "Oleh Chyhrin <oleh.chyhrin@boostylabs.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat-watcher": "^2.5.0",
+    "pg": "^8.13.1",
+    "typescript": "^5.6.2"
+  },
+  "scripts": {
+    "trigger:subnet": ". ./.env.akavefuji && npx hardhat run scripts/AddFile.ts --network akavefuji",
+    "trigger": ". ./.env.blank && npx hardhat run scripts/AddFile.ts --network localhost",
+    "set-up-listener-db:subnet": ". ./.env.akavefuji && npx hardhat run scripts/event-listen.ts --network akavefuji",
+    "set-up-listener": ". ./.env.blank && npx hardhat run scripts/event-listen-sql-db.ts --network localhost",
+    "read-data": "npx hardhat run scripts/read-data.ts",
+    "start": "npx hardhat run scripts/event-listen.ts --network akavefuji",
+    "start-api": "node express-api/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
